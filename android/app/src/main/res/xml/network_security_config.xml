@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- 모든 네트워크 연결에 적용되는 기본 설정 -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- 공인 인증기관(CA)의 인증서 신뢰 -->
+            <certificates src="system"/>
+            <!-- 사용자가 직접 설치한 인증서도 신뢰
+                (fake-detector의 자체 서명 인증서 허용을 위해 필요) -->
+            <certificates src="user"/>
+        </trust-anchors>
+    </base-config>
+</network-security-config>
