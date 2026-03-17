@@ -1,7 +1,6 @@
-# Fake Detector Android App
+# Deepfake Chatbot Android/iOS App
 
 ## 개발 환경
-
 | 항목 | 내용 |
 |------|------|
 | OS | Ubuntu 22.04 (SSH 서버) |
@@ -35,17 +34,16 @@
 - `flutter doctor --android-licenses` 로 라이선스 전체 동의
 
 ### 5. 환경 확인
-- `flutter doctor` 로 Android toolchain  확인
+- `flutter doctor` 로 Android toolchain 확인
 - Chrome / Linux toolchain 오류는 Android APK 빌드와 무관하므로 무시
 
 ---
 
 ## 프로젝트 구조
-
 ```
-fake_detector/
+chatbot_detector/
 ├── lib/
-│   └── main.dart                  # 앱 핵심 코드 (WebView + 파일 업로드)
+│   └── main.dart                  # 앱 핵심 코드 (WebView + 플랫폼 분기)
 ├── android/
 │   └── app/
 │       └── src/main/
@@ -53,28 +51,64 @@ fake_detector/
 │           ├── kotlin/.../MainActivity.kt  # 파일 선택창 네이티브 코드
 │           └── res/xml/
 │               └── network_security_config.xml  # SSL 인증서 설정
+├── ios/
+│   ├── Podfile                    # iOS 의존성 관리
+│   └── Runner/                   # iOS 앱 설정
 ├── pubspec.yaml                   # 패키지 의존성 관리
 └── build/
     └── app/outputs/flutter-apk/
-        └── app-release.apk        # 빌드 결과물
+        └── app-release.apk        # Android 빌드 결과물
 ```
 
 ---
 
 ## 주요 패키지
-
 | 패키지 | 용도 |
 |--------|------|
-| `webview_flutter` | 앱 안에서 웹사이트 표시 |
+| `webview_flutter` | 앱 안에서 웹사이트 표시 (Android/iOS 공통) |
 | `webview_flutter_android` | Android 전용 WebView 설정 (파일 업로드 등) |
 
 ---
 
-## APK 빌드 명령어
-
+## APK 빌드 명령어 (Android)
 ```bash
-cd ~/projects/fake_detector
+cd ~/projects/chatbot_detector
 flutter build apk --release
 ```
-
 결과물 경로: `build/app/outputs/flutter-apk/app-release.apk`
+
+---
+
+## iOS 빌드 방법 (Mac 환경 필요)
+### 사전 준비
+- macOS + Xcode 설치
+- Homebrew, Flutter, CocoaPods 설치
+```bash
+brew install flutter
+brew install cocoapods
+```
+
+### iOS 의존성 설치
+```bash
+cd ios && pod install && cd ..
+```
+
+### 시뮬레이터 실행
+```bash
+flutter run
+```
+
+### 실제 기기 설치
+- Xcode에서 `ios/Runner.xcworkspace` 열기
+- Signing & Capabilities에서 Apple ID 설정
+- 기기 연결 후 ▶ Run
+
+---
+
+## 주요 변경 사항 (fake_detector 대비)
+| 항목 | 내용 |
+|------|------|
+| 앱 이름 | `deepfake_chatbot` |
+| 타겟 URL | `https://securemachineslab.com:26000/chat_bot/` |
+| iOS 지원 | Android/iOS 플랫폼 조건부 분기 추가 |
+| User-Agent | iOS: Safari, Android: Chrome 자동 분기 |
